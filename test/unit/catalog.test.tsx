@@ -1,13 +1,10 @@
 import React from "react";
-import "@testing-library/jest-dom/jest-globals";
-import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import { ProductShortInfo } from "../../src/common/types";
 import { Catalog } from "../../src/client/pages/Catalog";
 import { Provider } from "react-redux";
-import { initStore } from "../../src/client/store";
-import { CartApi, ExampleApi } from "../../src/client/api";
 import { BrowserRouter } from "react-router-dom";
+import { store } from "./helper.test";
 
 const mockProducts: ProductShortInfo[] = [
   {
@@ -33,25 +30,6 @@ jest.mock("axios", () => ({
     .mockImplementation(() => Promise.resolve({ data: mockProducts })),
 }));
 
-const mockUseSelector = jest.fn().mockReturnValue(mockProducts);
-const mockUseDispatch = jest.fn().mockReturnValue(mockProducts);
-
-jest.mock("react", () => ({
-  ...jest.requireActual("react"),
-  useSelector: mockUseSelector,
-  useDispatch: mockUseDispatch,
-  React: jest.fn(),
-}));
-
-jest.mock("../../src/client/store", () => ({
-  ...jest.requireActual("../../src/client/store"),
-  productsLoad: jest.fn().mockReturnValue({ type: "PRODUCTS_LOAD" }),
-}));
-
-const basename = "/hw/store";
-const api = new ExampleApi(basename);
-const cart = new CartApi();
-const store = initStore(api, cart);
 
 beforeEach(async () => {
   await waitFor(() => {

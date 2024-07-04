@@ -10,11 +10,13 @@
         "moduleResolution": "node"
     },
     "include": [
-        "src"
+        "src",
+         "./jest-setup.ts"
     ],
     "ts-node": {
         "compilerOptions": {
             "module": "CommonJS"
         }
-    }
+    },
+ 
 }

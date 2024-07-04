@@ -1,14 +1,11 @@
 import React from "react";
-import "@testing-library/jest-dom/jest-globals";
-import "@testing-library/jest-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ProductDetails } from "../../src/client/components/ProductDetails";
 import {ProductItem} from '../../src/client/components/ProductItem'
 import { Product } from "../../src/common/types";
 import { Provider } from "react-redux";
-import { initStore } from "../../src/client/store";
-import { CartApi, ExampleApi } from "../../src/client/api";
 import { BrowserRouter } from "react-router-dom";
+import { store } from "./helper.test";
 
 const mockProduct: Product = {
   color: "Blue",
@@ -18,11 +15,6 @@ const mockProduct: Product = {
   id: 123,
   price: 200,
 };
-
-const basename = "/hw/store";
-const api = new ExampleApi(basename);
-const cart = new CartApi();
-const store = initStore(api, cart);
 
 describe("Тестирование страницы товара", () => {
   it('На странице с подробной информацией отображаются: название товара, его описание, цена, цвет, материал и кнопка "добавить в корзину"', () => {

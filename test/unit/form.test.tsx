@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor} from "@testing-library/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { Cart } from "../../src/client/pages/Cart";
-import { store, cart } from "./helper.test";
+import { cart, store } from "./helper.test";
 
 
 beforeEach(() => { 
@@ -16,9 +16,9 @@ beforeEach(() => {
   );
 })
 
-describe('Тестирование корзины', () => {
+describe('Тестирование формы', () => {
  
-  it('Отображение таблицы товаров в корзине', () => {
+  it('Валидация полей', () => {
 
     const product1 = screen.getByText('Solid kogtetochka')
     const product2 = screen.getByText('Luxury kogtetochka')
