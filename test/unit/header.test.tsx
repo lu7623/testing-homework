@@ -12,6 +12,7 @@ import {Application} from '../../src/client/Application'
 const basename = "/hw/store";
 const api = new ExampleApi(basename);
 const cart = new CartApi();
+cart.setState([{ count: 3, price: 200, name: 'Solid kogtetochka' }, { count: 2, price: 1300, name: 'Luxury kogtetochka' }]);
 const store = initStore(api, cart);
 
 
@@ -30,7 +31,7 @@ describe('Тестирование хедера', () => {
       const catalog = screen.getByText('Catalog');
       const delivery = screen.getByText('Delivery')
       const contacts = screen.getByText('Contacts')
-      const cart = screen.getByText('Cart')
+      const cart = screen.getByText('Cart', {exact: false})
      
 
       expect(catalog).toBeInTheDocument()
@@ -48,11 +49,11 @@ describe('Тестирование хедера', () => {
       expect(title).toBeInTheDocument()
       expect(title).toHaveAttribute('href', '/');
     });
-   
-  // it('на ширине меньше 576px навигационное меню должно скрываться за "гамбургер", при выборе элемента из меню "гамбургера", меню должно закрываться', async () => {
-  
+    it('Отображение количества товаров в корзине в шапке', () => {
 
-     
-      
-  //   });
+        const cart = screen.getByText('Cart (2)')
+  
+        expect(cart).toBeInTheDocument()
+  
+      });
 });
