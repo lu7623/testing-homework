@@ -3,10 +3,12 @@ import "@testing-library/jest-dom/jest-globals";
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ProductDetails } from "../../src/client/components/ProductDetails";
+import {ProductItem} from '../../src/client/components/ProductItem'
 import { Product } from "../../src/common/types";
 import { Provider } from "react-redux";
 import { initStore } from "../../src/client/store";
 import { CartApi, ExampleApi } from "../../src/client/api";
+import { BrowserRouter } from "react-router-dom";
 
 const mockProduct: Product = {
   color: "Blue",
@@ -65,7 +67,7 @@ describe("Тестирование страницы товара", () => {
       expect(store.getState().cart[123].count).toBe(2);
     });
   });
-  it("Если товар уже добавлен в корзину, в каталоге и на странице товара должно отображаться сообщение об этом", async () => {
+  it("Если товар уже добавлен в корзину, на странице товара должно отображаться сообщение об этом", async () => {
     render(
       <Provider store={store}>
         <ProductDetails product={mockProduct} />
@@ -79,5 +81,15 @@ describe("Тестирование страницы товара", () => {
       expect(screen.getByText("Item in cart")).toBeInTheDocument();
     });
   });
- 
+  it("Если товар уже добавлен в корзину, в каталоге должно отображаться сообщение об этом", async () => {
+    render(
+      <BrowserRouter>
+      <Provider store={store}>
+        <ProductItem product={mockProduct} />
+        </Provider>
+        </BrowserRouter>
+    );
+
+      expect(screen.getByText("Item in cart")).toBeInTheDocument();
+  });
 });
