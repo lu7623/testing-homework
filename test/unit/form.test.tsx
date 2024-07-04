@@ -16,45 +16,50 @@ beforeEach(() => {
   );
 })
 
+jest.mock("axios", () => ({
+  post: jest
+    .fn()
+    .mockImplementation(() => Promise.resolve({ data: {id: 1} })),
+}));
+
 describe('Тестирование формы', () => {
  
-  it('Валидация полей', () => {
+  it('Валидация полей', async() => {
 
-    const product1 = screen.getByText('Solid kogtetochka')
-    const product2 = screen.getByText('Luxury kogtetochka')
-    const price1 = screen.getByText('$200')
-    const price2 = screen.getByText('$1300')
-    const total1 = screen.getByText('$600')
-    const total2= screen.getByText('$2600')
+    const nameField = screen.getByRole("textbox", { name: 'Name' });
+    const phoneField = screen.getByRole("textbox", { name: 'Phone' });
+    const addressField = screen.getByRole("textbox", { name: 'Address' });
+   const checkout= screen.getByText('Checkout')
+    await waitFor(() => {
+      fireEvent.change(nameField, { target: { value: "lu" } });
+      fireEvent.change(phoneField, { target: { value: ")" } });
+      fireEvent.change(addressField, { target: { value: "Moscow)" } });
+    })
 
-    expect(product1).toBeInTheDocument()
-    expect(product2).toBeInTheDocument()
-    expect(price1).toBeInTheDocument()
-    expect(price2).toBeInTheDocument()
-    expect(total1).toBeInTheDocument()
-    expect(total2).toBeInTheDocument()
-  });
- 
-  it('Очистка корзины по кнопке', () => {
-      
-   const clearCart = screen.getByText('Clear shopping cart')
-      fireEvent.click(clearCart);
-
-
-      expect(cart.getState()).toStrictEqual({})
-  });
- 
-  it('Если корзина пуста, отображается ссылка', async () => {
-      
+      fireEvent.click(checkout)
       await waitFor(() => {
-        const emptyCart = screen.getByText('Cart is empty',  { exact: false })
-        const link = screen.getByRole('link');
-        expect(emptyCart).toBeInTheDocument();
-        expect(link).toBeInTheDocument()
-        expect(link).toHaveAttribute('href', '/catalog')
-      })
-      
-  
-    });
+     expect(screen.getByText('Please provide a valid phone')).toBeVisible()
+   });
+    
+  });
+ 
+ 
+  it('Чекаут заказа', async() => {
+    const nameField = screen.getByRole("textbox", { name: 'Name' });
+    const phoneField = screen.getByRole("textbox", { name: 'Phone' });
+    const addressField = screen.getByRole("textbox", { name: 'Address' });
+   const checkout= screen.getByText('Checkout')
+    await waitFor(() => {
+      fireEvent.change(nameField, { target: { value: "lu" } });
+      fireEvent.change(phoneField, { target: { value: "+90000000000" } });
+      fireEvent.change(addressField, { target: { value: "Moscow)" } });
+    })
+
+      fireEvent.click(checkout)
+      await waitFor(() => {
+     expect(screen.getByText('Well done!')).toBeInTheDocument();
+     expect(screen.getByText('has been successfully completed.', {exact: false})).toBeInTheDocument();
+   });
+  });
  
 });
