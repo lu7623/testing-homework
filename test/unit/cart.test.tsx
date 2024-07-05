@@ -3,22 +3,20 @@ import { fireEvent, render, screen, waitFor} from "@testing-library/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { Cart } from "../../src/client/pages/Cart";
-import { store, cart } from "./helper.test";
+import { initState } from "./helper";
 
-
-beforeEach(() => { 
-  render(
-    <BrowserRouter>
-    <Provider store={store}>
-      <Cart />
-      </Provider>
-      </BrowserRouter>
-  );
-})
 
 describe('Тестирование корзины', () => {
  
   it('Отображение таблицы товаров в корзине', () => {
+    const init= initState(false)
+    render(
+      <BrowserRouter>
+      <Provider store={init.store}>
+        <Cart />
+        </Provider>
+        </BrowserRouter>
+    );
 
     const product1 = screen.getByText('Solid kogtetochka')
     const product2 = screen.getByText('Luxury kogtetochka')
@@ -36,16 +34,35 @@ describe('Тестирование корзины', () => {
   });
  
   it('Очистка корзины по кнопке', () => {
-      
+    const init= initState(false)
+    render(
+      <BrowserRouter>
+      <Provider store={init.store}>
+        <Cart />
+        </Provider>
+        </BrowserRouter>
+    );
    const clearCart = screen.getByText('Clear shopping cart')
       fireEvent.click(clearCart);
 
 
-      expect(cart.getState()).toStrictEqual({})
+      expect(init.store.getState().cart).toStrictEqual({})
   });
  
   it('Если корзина пуста, отображается ссылка', async () => {
-      
+    const init= initState(false)
+    render(
+      <BrowserRouter>
+      <Provider store={init.store}>
+        <Cart />
+        </Provider>
+        </BrowserRouter>
+    );
+
+    const clearCart = screen.getByText('Clear shopping cart')
+    fireEvent.click(clearCart);
+
+
       await waitFor(() => {
         const emptyCart = screen.getByText('Cart is empty',  { exact: false })
         const link = screen.getByRole('link');

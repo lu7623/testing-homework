@@ -5,7 +5,8 @@ import {ProductItem} from '../../src/client/components/ProductItem'
 import { Product } from "../../src/common/types";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { store } from "./helper.test";
+import { initState } from "./helper";
+import { addToCart } from "../../src/client/store";
 
 const mockProduct: Product = {
   color: "Blue",
@@ -18,8 +19,10 @@ const mockProduct: Product = {
 
 describe("Тестирование страницы товара", () => {
   it('На странице с подробной информацией отображаются: название товара, его описание, цена, цвет, материал и кнопка "добавить в корзину"', () => {
+   
+   const init = initState(true)
     render(
-      <Provider store={store}>
+      <Provider store={init.store}>
         <ProductDetails product={mockProduct} />
       </Provider>
     );
@@ -41,8 +44,11 @@ describe("Тестирование страницы товара", () => {
     expect(addToCartBtn).toBeInTheDocument();
   });
   it('если товар уже добавлен в корзину, повторное нажатие кнопки "добавить в корзину" должно увеличивать его количество', async () => {
+       
+   const init = initState(true)
+    
     render(
-      <Provider store={store}>
+      <Provider store={init.store}>
         <ProductDetails product={mockProduct} />
       </Provider>
     );
@@ -50,18 +56,19 @@ describe("Тестирование страницы товара", () => {
     const addToCartBtn = screen.getByText("Add to Cart");
     fireEvent.click(addToCartBtn);
     await waitFor(() => {
-      expect(store.getState().cart[123].count).toBe(1);
+      expect(init.store.getState().cart[123].count).toBe(1);
     })
 
     fireEvent.click(addToCartBtn);
 
     await waitFor(() => {
-      expect(store.getState().cart[123].count).toBe(2);
+      expect(init.store.getState().cart[123].count).toBe(2);
     });
   });
   it("Если товар уже добавлен в корзину, на странице товара должно отображаться сообщение об этом", async () => {
+    const init = initState(true)
     render(
-      <Provider store={store}>
+      <Provider store={init.store}>
         <ProductDetails product={mockProduct} />
       </Provider>
     );
@@ -74,9 +81,11 @@ describe("Тестирование страницы товара", () => {
     });
   });
   it("Если товар уже добавлен в корзину, в каталоге должно отображаться сообщение об этом", async () => {
+    const init = initState(true)
+init.store.dispatch(addToCart(mockProduct))
     render(
       <BrowserRouter>
-      <Provider store={store}>
+      <Provider store={init.store}>
         <ProductItem product={mockProduct} />
         </Provider>
         </BrowserRouter>
