@@ -6,7 +6,6 @@ import { Product } from "../../src/common/types";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
-
 const mockProduct: Product = {
   color: "Blue",
   description: "Really Incredible kogtetochka for Sphynx",
@@ -16,25 +15,21 @@ const mockProduct: Product = {
   price: 200,
 };
 
-
-beforeEach(() => { 
- 
+beforeEach(() => {
   global.localStorage = new LocalStorageMock();
- 
-const init = initState()
+  const init = initState();
+
   render(
     <BrowserRouter>
-    <Provider store={init}>
-      <ProductDetails product={mockProduct} />
+      <Provider store={init}>
+        <ProductDetails product={mockProduct} />
       </Provider>
-      </BrowserRouter>
+    </BrowserRouter>
   );
-})
-
+});
 
 describe("Тестирование страницы товара", () => {
   it('На странице с подробной информацией отображаются: название товара, его описание, цена, цвет, материал и кнопка "добавить в корзину"', () => {
-
     const name = screen.getByText("Best kogtetochka");
     const description = screen.getByText(
       "Really Incredible kogtetochka for Sphynx"
@@ -52,22 +47,27 @@ describe("Тестирование страницы товара", () => {
     expect(addToCartBtn).toBeInTheDocument();
   });
   it('если товар уже добавлен в корзину, повторное нажатие кнопки "добавить в корзину" должно увеличивать его количество', async () => {
-  
     const addToCartBtn = screen.getByText("Add to Cart");
     fireEvent.click(addToCartBtn);
     await waitFor(() => {
-      expect(localStorage.getItem('example-store-cart')).toStrictEqual(JSON.stringify({'123': {name: mockProduct.name, count: 1, price:mockProduct.price}}))
-    })
+      expect(localStorage.getItem("example-store-cart")).toStrictEqual(
+        JSON.stringify({
+          "123": { name: mockProduct.name, count: 1, price: mockProduct.price },
+        })
+      );
+    });
 
     fireEvent.click(addToCartBtn);
 
     await waitFor(() => {
-      expect(localStorage.getItem('example-store-cart')).toStrictEqual(JSON.stringify({'123': {name: mockProduct.name, count: 2, price:mockProduct.price}}))
+      expect(localStorage.getItem("example-store-cart")).toStrictEqual(
+        JSON.stringify({
+          "123": { name: mockProduct.name, count: 2, price: mockProduct.price },
+        })
+      );
     });
   });
   it("Если товар уже добавлен в корзину, на странице товара должно отображаться сообщение об этом", async () => {
-
-
     const addToCartBtn = screen.getByText("Add to Cart");
     fireEvent.click(addToCartBtn);
 
@@ -75,5 +75,4 @@ describe("Тестирование страницы товара", () => {
       expect(screen.getByText("Item in cart")).toBeInTheDocument();
     });
   });
-  
 });

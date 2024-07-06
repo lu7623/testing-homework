@@ -1,6 +1,6 @@
 import React from "react";
 import { initState, LocalStorageMock } from "../helper";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { ProductShortInfo } from "../../src/common/types";
 import { Catalog } from "../../src/client/pages/Catalog";
 import { Provider } from "react-redux";
@@ -31,6 +31,8 @@ jest.mock("axios", () => ({
     .fn()
     .mockImplementation(() => Promise.resolve({ data: mockProducts })),
 }));
+
+
 
 
 beforeEach(async () => {
