@@ -1,10 +1,12 @@
 import React from "react";
+import { initState, LocalStorageMock } from "../helper";
 import { render, screen, waitFor } from "@testing-library/react";
 import { ProductShortInfo } from "../../src/common/types";
 import { Catalog } from "../../src/client/pages/Catalog";
 import { Provider } from "react-redux";
+import '@testing-library/jest-dom';
 import { BrowserRouter } from "react-router-dom";
-import { store } from "./helper.test";
+
 
 const mockProducts: ProductShortInfo[] = [
   {
@@ -32,10 +34,19 @@ jest.mock("axios", () => ({
 
 
 beforeEach(async () => {
+  global.localStorage = new LocalStorageMock();
+  localStorage.setItem('example-store-cart', JSON.stringify({
+    "123": {
+        "name": "Best kogtetochka",
+        "count": 1,
+        "price": 200
+    }}))
+
+  const init = initState()
   await waitFor(() => {
     render(
       <BrowserRouter>
-        <Provider store={store}>
+        <Provider store={init}>
           <Catalog />
         </Provider>
       </BrowserRouter>
@@ -94,4 +105,13 @@ describe("Тестирование каталога", () => {
       expect(link3).toBeInTheDocument();
       expect(link3).toHaveAttribute("href", "/catalog/345");
   });
+  it("Если товар уже добавлен в корзину, в каталоге должно отображаться сообщение об этом", async () => {
+
+await waitFor (() => {
+
+  const product1 = screen.getAllByTestId("123")[1];
+  expect(product1).toHaveTextContent('Item in cart')
+});
+})
+      
 });

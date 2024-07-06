@@ -1,28 +1,37 @@
+import { initState, LocalStorageMock } from "../helper";
 import React from "react";
 import { render, screen} from "@testing-library/react";
 import { Provider } from "react-redux";
-import { initStore } from "../../src/client/store";
-import { CartApi, ExampleApi } from "../../src/client/api";
 import { BrowserRouter } from "react-router-dom";
 import {Application} from '../../src/client/Application'
 
 
-const basename = "/hw/store";
-const api = new ExampleApi(basename);
-const cart = new CartApi();
-cart.setState([{ count: 3, price: 200, name: 'Solid kogtetochka' }, { count: 2, price: 1300, name: 'Luxury kogtetochka' }]);
-const store = initStore(api, cart);
-
-
-beforeEach(() => { 
+beforeEach(() => {
+  
+  global.localStorage = new LocalStorageMock();
+  localStorage.setItem('example-store-cart', JSON.stringify({
+    "0": {
+        "name": "Solid kogtetochka",
+        "count": 3,
+        "price": 200
+    },
+    "1": {
+        "name": "Luxury kogtetochka",
+        "count": 2,
+        "price": 1300
+    }
+}))
+  const init = initState() 
   render(
     <BrowserRouter>
-    <Provider store={store}>
+    <Provider store={init}>
       <Application />
       </Provider>
       </BrowserRouter>
   );
 })
+
+
 describe('Тестирование хедера', () => {
     it('в шапке отображаются ссылки на страницы магазина, а также ссылка на корзину', () => {
     

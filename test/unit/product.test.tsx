@@ -1,12 +1,11 @@
 import React from "react";
+import { initState, LocalStorageMock } from "../helper";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ProductDetails } from "../../src/client/components/ProductDetails";
-import {ProductItem} from '../../src/client/components/ProductItem'
 import { Product } from "../../src/common/types";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { initState } from "./helper";
-import { addToCart } from "../../src/client/store";
+
 
 const mockProduct: Product = {
   color: "Blue",
@@ -17,15 +16,24 @@ const mockProduct: Product = {
   price: 200,
 };
 
+
+beforeEach(() => { 
+ 
+  global.localStorage = new LocalStorageMock();
+ 
+const init = initState()
+  render(
+    <BrowserRouter>
+    <Provider store={init}>
+      <ProductDetails product={mockProduct} />
+      </Provider>
+      </BrowserRouter>
+  );
+})
+
+
 describe("Тестирование страницы товара", () => {
   it('На странице с подробной информацией отображаются: название товара, его описание, цена, цвет, материал и кнопка "добавить в корзину"', () => {
-   
-   const init = initState(true)
-    render(
-      <Provider store={init.store}>
-        <ProductDetails product={mockProduct} />
-      </Provider>
-    );
 
     const name = screen.getByText("Best kogtetochka");
     const description = screen.getByText(
@@ -44,34 +52,21 @@ describe("Тестирование страницы товара", () => {
     expect(addToCartBtn).toBeInTheDocument();
   });
   it('если товар уже добавлен в корзину, повторное нажатие кнопки "добавить в корзину" должно увеличивать его количество', async () => {
-       
-   const init = initState(true)
-    
-    render(
-      <Provider store={init.store}>
-        <ProductDetails product={mockProduct} />
-      </Provider>
-    );
-
+  
     const addToCartBtn = screen.getByText("Add to Cart");
     fireEvent.click(addToCartBtn);
     await waitFor(() => {
-      expect(init.store.getState().cart[123].count).toBe(1);
+      expect(localStorage.getItem('example-store-cart')).toStrictEqual(JSON.stringify({'123': {name: mockProduct.name, count: 1, price:mockProduct.price}}))
     })
 
     fireEvent.click(addToCartBtn);
 
     await waitFor(() => {
-      expect(init.store.getState().cart[123].count).toBe(2);
+      expect(localStorage.getItem('example-store-cart')).toStrictEqual(JSON.stringify({'123': {name: mockProduct.name, count: 2, price:mockProduct.price}}))
     });
   });
   it("Если товар уже добавлен в корзину, на странице товара должно отображаться сообщение об этом", async () => {
-    const init = initState(true)
-    render(
-      <Provider store={init.store}>
-        <ProductDetails product={mockProduct} />
-      </Provider>
-    );
+
 
     const addToCartBtn = screen.getByText("Add to Cart");
     fireEvent.click(addToCartBtn);
@@ -80,17 +75,5 @@ describe("Тестирование страницы товара", () => {
       expect(screen.getByText("Item in cart")).toBeInTheDocument();
     });
   });
-  it("Если товар уже добавлен в корзину, в каталоге должно отображаться сообщение об этом", async () => {
-    const init = initState(true)
-init.store.dispatch(addToCart(mockProduct))
-    render(
-      <BrowserRouter>
-      <Provider store={init.store}>
-        <ProductItem product={mockProduct} />
-        </Provider>
-        </BrowserRouter>
-    );
-
-      expect(screen.getByText("Item in cart")).toBeInTheDocument();
-  });
+  
 });

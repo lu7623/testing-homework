@@ -3,21 +3,40 @@ import { fireEvent, render, screen, waitFor} from "@testing-library/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { Cart } from "../../src/client/pages/Cart";
-import { initState } from "./helper";
+import {initState, LocalStorageMock} from "../helper";
+
+
+beforeEach(() => { 
+ 
+  global.localStorage = new LocalStorageMock();
+  localStorage.setItem('example-store-cart', JSON.stringify({
+    "0": {
+        "name": "Solid kogtetochka",
+        "count": 3,
+        "price": 200
+    },
+    "1": {
+        "name": "Luxury kogtetochka",
+        "count": 2,
+        "price": 1300
+    }
+}))
+const init = initState()
+  render(
+    <BrowserRouter>
+    <Provider store={init}>
+      <Cart />
+      </Provider>
+      </BrowserRouter>
+  );
+})
+
 
 
 describe('Тестирование корзины', () => {
  
   it('Отображение таблицы товаров в корзине', () => {
-    const init= initState(false)
-    render(
-      <BrowserRouter>
-      <Provider store={init.store}>
-        <Cart />
-        </Provider>
-        </BrowserRouter>
-    );
-
+   
     const product1 = screen.getByText('Solid kogtetochka')
     const product2 = screen.getByText('Luxury kogtetochka')
     const price1 = screen.getByText('$200')
@@ -34,31 +53,16 @@ describe('Тестирование корзины', () => {
   });
  
   it('Очистка корзины по кнопке', () => {
-    const init= initState(false)
-    render(
-      <BrowserRouter>
-      <Provider store={init.store}>
-        <Cart />
-        </Provider>
-        </BrowserRouter>
-    );
+ 
    const clearCart = screen.getByText('Clear shopping cart')
       fireEvent.click(clearCart);
 
 
-      expect(init.store.getState().cart).toStrictEqual({})
+      expect(localStorage.getItem('example-store-cart')).toStrictEqual("{}")
   });
  
   it('Если корзина пуста, отображается ссылка', async () => {
-    const init= initState(false)
-    render(
-      <BrowserRouter>
-      <Provider store={init.store}>
-        <Cart />
-        </Provider>
-        </BrowserRouter>
-    );
-
+   
     const clearCart = screen.getByText('Clear shopping cart')
     fireEvent.click(clearCart);
 
