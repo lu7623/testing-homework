@@ -1,6 +1,6 @@
 export default {
     gridUrl: "http://localhost:4444/wd/hub",
-    baseUrl: "http://localhost:3000/hw/store",
+    baseUrl: "http://localhost:3000",
     pageLoadTimeout: 0,
     httpTimeout: 60000,
     testTimeout: 90000,
@@ -8,7 +8,7 @@ export default {
     sets: {
         desktop: {
             files: [
-                "testplane-tests/**/*.testplane.(t|j)s"
+                "test/testplane-tests/**/*.testplane.(t|j)s"
             ],
             browsers: [
                 "chrome"
