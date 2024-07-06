@@ -1,6 +1,6 @@
 import React from "react";
 import { initState, LocalStorageMock } from "../helper";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ProductShortInfo } from "../../src/common/types";
 import { Catalog } from "../../src/client/pages/Catalog";
 import { Provider } from "react-redux";
@@ -54,6 +54,7 @@ beforeEach(async () => {
   })
   
 });
+
 describe("Тестирование каталога", () => {
   it("В каталоге отображаются товары, список которых приходит с сервера",  () => {
       const product1 = screen.getAllByTestId("123")[1];
@@ -113,5 +114,5 @@ await waitFor (() => {
   expect(product1).toHaveTextContent('Item in cart')
 });
 })
-      
+
 });

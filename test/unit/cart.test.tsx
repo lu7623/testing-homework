@@ -21,7 +21,7 @@ beforeEach(() => {
         "price": 1300
     }
 }))
-const init = initState()
+ const init = initState()
   render(
     <BrowserRouter>
     <Provider store={init}>
