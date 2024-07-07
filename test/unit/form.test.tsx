@@ -37,7 +37,7 @@ beforeEach(() => {
 jest.mock("axios", () => ({
   post: jest
     .fn()
-    .mockImplementation((x) => Promise.resolve({ data: { id: 1 } })),
+    .mockImplementation(() => Promise.resolve({ data: { id: 1 } })),
 }));
 
 async function applyForm(name: string, phone: string, address: string) {

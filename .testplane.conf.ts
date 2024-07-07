@@ -21,7 +21,8 @@ export default {
             headless: false,
             desiredCapabilities: {
                 browserName: "chrome"
-            }
+            },
+            screenshotDelay: 200,
         }
     },
     plugins: {
