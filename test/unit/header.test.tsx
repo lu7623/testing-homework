@@ -32,6 +32,11 @@ beforeEach(() => {
   );
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+
 describe("Тестирование хедера", () => {
   it("в шапке отображаются ссылки на страницы магазина, а также ссылка на корзину", () => {
     const catalog = screen.getByText("Catalog");

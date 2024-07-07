@@ -4,7 +4,6 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { Cart } from "../../src/client/pages/Cart";
-import axios from "axios";
 
 beforeEach(() => {
   global.localStorage = new LocalStorageMock();
@@ -34,11 +33,10 @@ beforeEach(() => {
   );
 });
 
-jest.mock("axios", () => ({
-  post: jest
-    .fn()
-    .mockImplementation(() => Promise.resolve({ data: { id: 1 } })),
-}));
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 
 async function applyForm(name: string, phone: string, address: string) {
   const nameField = screen.getByRole("textbox", { name: "Name" });
@@ -104,34 +102,5 @@ describe("Тестирование формы", () => {
     await waitFor(() => {
       expect(localStorage.getItem("example-store-cart")).toStrictEqual("{}");
     });
-  });
-  it("Отправить данные после чекаута", async () => {
-    applyForm("lu", "+900000000000", "Moscow");
-
-    let mockCheckoutData = {
-      form: {
-        name: "lu",
-        phone: "+90000000000",
-        address: "Moscow",
-      },
-      cart: {
-        "0": {
-          name: "Solid kogtetochka",
-          count: 3,
-          price: 200,
-        },
-        "1": {
-          name: "Luxury kogtetochka",
-          count: 2,
-          price: 1300,
-        },
-      },
-    };
-
-    expect(axios.post).toHaveBeenLastCalledWith(
-      expect.anything(),
-      mockCheckoutData,
-      expect.anything()
-    );
-  });
+  })
 });

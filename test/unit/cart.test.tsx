@@ -31,6 +31,9 @@ beforeEach(() => {
   );
 })
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 
 describe('Тестирование корзины', () => {

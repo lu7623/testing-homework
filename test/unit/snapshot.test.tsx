@@ -6,9 +6,13 @@ import {Contacts} from "../../src/client/pages/Contacts"
 import { Provider } from "react-redux";
 import { ProductDetails } from "../../src/client/components/ProductDetails";
 import { initState, LocalStorageMock } from "../helper";
-import { Product, ProductShortInfo } from "../../src/common/types";
+import { Product } from "../../src/common/types";
 import { Catalog } from "../../src/client/pages/Catalog";
 import { Cart } from "../../src/client/pages/Cart";
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("Страницы отображаются верно", () => {
   it("Страница доставки сохраняет статическое содержание", () => {
@@ -40,30 +44,6 @@ describe("Страницы отображаются верно", () => {
   });
   it("Страница каталога отображается верно", () => {
    
-const mockProducts: ProductShortInfo[] = [
-    {
-      name: "Best kogtetochka",
-      id: 123,
-      price: 200,
-    },
-    {
-      name: "Savage kogtetochka",
-      id: 234,
-      price: 400,
-    },
-    {
-      name: "Unique kogtetochka",
-      id: 345,
-      price: 500,
-    },
-  ];
-  
-  jest.mock("axios", () => ({
-    get: jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ data: mockProducts })),
-  }));
-  
   const init = initState()
     const domTree = renderer.create(<Provider store={init}>
         <Catalog />

@@ -1,38 +1,10 @@
 import React from "react";
 import { initState, LocalStorageMock } from "../helper";
 import { render, screen, waitFor } from "@testing-library/react";
-import { ProductShortInfo } from "../../src/common/types";
 import { Catalog } from "../../src/client/pages/Catalog";
 import { Provider } from "react-redux";
 import '@testing-library/jest-dom';
 import { BrowserRouter } from "react-router-dom";
-
-
-const mockProducts: ProductShortInfo[] = [
-  {
-    name: "Best kogtetochka",
-    id: 123,
-    price: 200,
-  },
-  {
-    name: "Savage kogtetochka",
-    id: 234,
-    price: 400,
-  },
-  {
-    name: "Unique kogtetochka",
-    id: 345,
-    price: 500,
-  },
-];
-
-jest.mock("axios", () => ({
-  get: jest
-    .fn()
-    .mockImplementation(() => Promise.resolve({ data: mockProducts })),
-}));
-
-
 
 
 beforeEach(async () => {
@@ -56,6 +28,11 @@ beforeEach(async () => {
   })
   
 });
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 
 describe("Тестирование каталога", () => {
   it("В каталоге отображаются товары, список которых приходит с сервера",  () => {
