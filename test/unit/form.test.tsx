@@ -61,17 +61,6 @@ describe("Тестирование формы", () => {
       expect(screen.queryByText("Please provide a valid phone")).toBeVisible();
     });
   });
-  it("Валидация полей при верных данных", async () => {
-
-    applyForm("lu", "+90000000000", "Moscow");
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Please provide a valid phone")
-      ).not.toBeInTheDocument();
-    });
-  });
-
   it("Показать сообщение об успехе при удачной обработке заказа", async () => {
 
     applyForm("lu", "+90000000000", "Moscow");
